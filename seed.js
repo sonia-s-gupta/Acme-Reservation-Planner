@@ -2,7 +2,8 @@ const {
     client,
     createTables,
     createCustomer,
-    createRestaurant
+    createRestaurant,
+    createReservation
 } = require('.server/db'); // Import functions from db.js
 
 const seed = async () => {
@@ -25,6 +26,23 @@ const seed = async () => {
             createRestaurant({ name: 'Ihop'}),
         ]);
         console.log('Customers and Restaurants created');
+
+        // Create reservations
+        const [reservation1, reservation2] = await Promise.all([
+            createReservation({
+                reservation_date: '2025-01-01',
+                party_count: 4,
+                customer_id: Michael.id,
+                restaurant_id: Chilis.id
+            }),
+            createReservation({
+                reservation_date: '2025-02-14',
+                party_count: 2,
+                customer_id: Jim.id,
+                restaurant_id: Sbarro.id
+            }),
+        ]);
+        console.log('Reservations created');
 
     } catch (error) {
         console.error('Error seeding data:', error); // Log any errors
