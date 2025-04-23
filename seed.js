@@ -4,7 +4,7 @@ const {
     createCustomer,
     createRestaurant,
     createReservation
-} = require('.server/db'); // Import functions from db.js
+} = require('./server/db'); // Import functions from db.js
 
 const seed = async () => {
     try {
@@ -17,13 +17,13 @@ const seed = async () => {
 
         // Create customers and restaurants
         const [Michael, Jim, Dwight, Pam, Chilis, Sbarro, Ihop] = await Promise.all([ 
-            createCustomer({ name: 'Michael'}),
-            createCustomer({ name: 'Jim'}),
-            createCustomer({ name: 'Dwight'}),
-            createCustomer({ name: 'Pam'}),
-            createRestaurant({ name: 'Chilis'}),
-            createRestaurant({ name: 'Sbarro'}),
-            createRestaurant({ name: 'Ihop'}),
+            createCustomer('Michael'),
+            createCustomer('Jim'),
+            createCustomer('Dwight'),
+            createCustomer('Pam'),
+            createRestaurant('Chilis'),
+            createRestaurant('Sbarro'),
+            createRestaurant('Ihop'),
         ]);
         console.log('Customers and Restaurants created');
 

@@ -5,6 +5,7 @@ const {
     fetchCustomers,
     fetchRestaurants,
     fetchReservations,
+    createReservation,
     destroyReservation
     } = require('./db'); // Import functions from db.js
 
@@ -45,6 +46,25 @@ app.get('/api/reservations', async (req, res, next) => {
     }
 });
 
+// Create a new reservation
+app.post('/api/customers/:id/reservations', async (req, res, next) => {
+    try {
+        const customer_id = req.params.id; // Get customer ID from request parameters
+        const { restaurant_id, reservation_date, party_count } = req.body; // Get reservation details from request body
+        
+        const newReservation = await createReservation({
+            reservation_date,
+            party_count,
+            customer_id,
+            restaurant_id
+        }); // Create a new reservation
+
+        res.status(201).send(newReservation); // Send the created reservation as response
+    } catch (error) {
+        next(error); // Pass the error to the next middleware
+    }
+});
+
 // Delete a reservation
 app.delete('/api/customers/:customer_id/reservations/:id', async (req, res, next) => {
     try {
@@ -53,6 +73,12 @@ app.delete('/api/customers/:customer_id/reservations/:id', async (req, res, next
     } catch (error) {
         next(error); // Pass the error to the next middleware
     }
+});
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+    console.error(error); // Log the error
+    res.status(500).send({ error: 'Internal Server Error' }); // Send Internal Server Error response
 });
 
 // Initialize server and database connection
@@ -64,6 +90,10 @@ const init = async () => {
     
         app.listen(PORT, () => { 
                 console.log(`Server is running on port ${PORT}`); // Log server start
+                console.log('Some curl commands to test the server:');
+                console.log(`curl localhost:${PORT}/api/customers`); // Log curl command to get customers
+                console.log(`curl localhost:${PORT}/api/restaurants`); // Log curl command to get restaurants
+                console.log(`curl localhost:${PORT}/api/reservations`); // Log curl command to get reservations
         });
     } catch (error) {
         console.error('Server error:', error); // Log any errors

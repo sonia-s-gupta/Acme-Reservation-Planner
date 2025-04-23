@@ -7,13 +7,14 @@ const createTables = async () => {
     DROP TABLE IF EXISTS reservations;
     DROP TABLE IF EXISTS customers;
     DROP TABLE IF EXISTS restaurants;
+    
     CREATE TABLE customers(
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(100) NOT NULL UNIQUE
     );
     CREATE TABLE restaurants(
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        name VARCHAR(100) NOT NULL UNIQUE,
+        name VARCHAR(100) NOT NULL UNIQUE
     );
     CREATE TABLE reservations(
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,7 +49,7 @@ const createReservation = async({ reservation_date, party_count, customer_id, re
     VALUES($1, $2, $3, $4) RETURNING *
     `;
     const response = await client.query(SQL, [reservation_date, party_count, customer_id, restaurant_id]);
-    return response.rows[0]; // Return the created reservation`
+    return response.rows[0]; // Return the created reservation
 };
 
 const fetchCustomers = async () => {
@@ -73,7 +74,7 @@ const destroyReservation = async (reservation_id, customer_id) => {
     const SQL = `
     DELETE FROM reservations WHERE id = $1 and customer_id = $2;
     `;
-    await client.query(SQL, reservation_id, customer_id); // Delete the reservation
+    await client.query(SQL, [reservation_id, customer_id]); // Delete the reservation
 };
 
 module.exports = {
